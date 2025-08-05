@@ -24,89 +24,104 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     console.log("Pass 1");
 
-    const result = await chrome.scripting.executeScript({
+    // const result = await chrome.scripting.executeScript({
+    //     target: { tabId: tab.id },
+    //     args: [zacCode, startDate, endDate],
+    //     func: async (zacCode, startDate, endDate) => {
+    //         console.log("runAutomation start");
+
+    //         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    //         function formatDate(dateObj) {
+    //             const yyyy = dateObj.getFullYear();
+    //             const mm = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    //             const dd = ('0' + dateObj.getDate()).slice(-2);
+    //             return `${yyyy}/${mm}/${dd}`;
+    //         }
+
+    //         function waitForDomLoad() {
+    //             return new Promise(resolve => {
+    //                 if (document.readyState === 'complete') {
+    //                     resolve();
+    //                 } else {
+    //                     window.addEventListener('load', () => resolve(), { once: true });
+    //                 }
+    //             });
+    //         }
+
+    //         function waitForPageReload() {
+    //             return new Promise(resolve => {
+    //                 window.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
+    //             });
+    //         }
+
+    //         async function loopDates() {
+    //             console.log("loopDates start");
+    //             const start = new Date(startDate);
+    //             const end = new Date(endDate);
+
+    //             for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    //                 const dayOfWeek = d.getDay(); // 0 = Ch? nh?t, 6 = Th? b?y
+    //                 if (dayOfWeek === 0 || dayOfWeek === 6) {
+    //                     continue;
+    //                 }
+
+    //                 const currentDate = formatDate(d);
+    //                 await waitForDomLoad();
+    //                 console.log("Running automation for:", currentDate);
+
+    //                 console.log("SubmitDateNippouChange(currentDate);");
+    //                 console.log(currentDate);
+    //                 // SubmitDateNippouChange(currentDate);
+    //                 if (typeof SubmitDateNippouChange === 'function') {
+    //                     SubmitDateNippouChange(currentDate);
+    //                 } else {
+    //                     console.error("SubmitDateNippouChange is not defined");
+    //                     break;
+    //                 }
+
+    //                 await delay(3000);
+
+    //                 // const select = document.getElementsByName("time_required_hour1")[0];
+    //                 // select.value = "7";
+    //                 // select.dispatchEvent(new Event("change"));
+
+    //                 // await delay(1000);
+
+    //                 // const input = document.querySelector('input[name="code_project1"]');
+    //                 // if (input) {
+    //                 //     input.value = zacCode;
+    //                 //     input.dispatchEvent(new Event('blur'));
+    //                 // }
+
+    //                 // await delay(1000);
+
+    //                 // const button = document.querySelector('#button7');
+    //                 // if (button) {
+    //                 //     button.click();
+    //                 // }
+
+    //                 // await delay(1000);
+
+    //                 // await waitForPageReload();
+    //             }
+
+    //             console.log("loopDates end");
+    //         }
+
+    //         await loopDates();
+    //         console.log("runAutomation end");
+    //     }
+    // });
+
+    
+    await chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        args: [zacCode, startDate, endDate],
-        func: async (zacCode, startDate, endDate) => {
-            console.log("runAutomation start");
-
-            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-            function formatDate(dateObj) {
-                const yyyy = dateObj.getFullYear();
-                const mm = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-                const dd = ('0' + dateObj.getDate()).slice(-2);
-                return `${yyyy}/${mm}/${dd}`;
-            }
-
-            function waitForDomLoad() {
-                return new Promise(resolve => {
-                    if (document.readyState === 'complete') {
-                        resolve();
-                    } else {
-                        window.addEventListener('load', () => resolve(), { once: true });
-                    }
-                });
-            }
-
-            function waitForPageReload() {
-                return new Promise(resolve => {
-                    window.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
-                });
-            }
-
-            async function loopDates() {
-                console.log("loopDates start");
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-
-                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                    const dayOfWeek = d.getDay(); // 0 = Ch? nh?t, 6 = Th? b?y
-                    if (dayOfWeek === 0 || dayOfWeek === 6) {
-                        continue;
-                    }
-
-                    const currentDate = formatDate(d);
-                    await waitForDomLoad();
-                    console.log("Running automation for:", currentDate);
-
-                    console.log("SubmitDateNippouChange(currentDate);");
-                    // // if (typeof SubmitDateNippouChange === 'function') {
-                    // //     SubmitDateNippouChange(currentDate);
-                    // // } else {
-                    // //     console.error("SubmitDateNippouChange is not defined");
-                    // //     break;
-                    // // }
-
-                    await delay(1000);
-
-                    const input = document.querySelector('input[name="code_project1"]');
-                    if (input) {
-                        input.value = zacCode;
-                        input.dispatchEvent(new Event('blur'));
-                    }
-
-                    await delay(1000);
-
-                    const button = document.querySelector('#button7');
-                    if (button) {
-                        button.click();
-                    }
-
-                    await delay(1000);
-
-                    // await waitForPageReload();
-                }
-
-                console.log("loopDates end");
-            }
-
-            await loopDates();
-            console.log("runAutomation end");
-        }
+        files: ["injected.js"]
     });
 
-    console.log("Script executed, result:", result);
+
+    // console.log("Script executed, result:", result);
 
 
     console.log("!!end!!");
@@ -209,6 +224,7 @@ document.getElementById("submitBtn").addEventListener("click", async () => {
 // /*
 // // change date
 // SubmitDateNippouChange('2025/06/20');
+// SubmitDateNippouChange('2025/07/01');
 
 // // nhap zac code
 // $('input[name="code_project1"]').val('1800152').trigger('blur');   // code_project1 gi? nguy?n, 1800152 l? c?i input zac code
